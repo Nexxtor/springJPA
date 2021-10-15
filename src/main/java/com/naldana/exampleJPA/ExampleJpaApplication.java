@@ -1,5 +1,6 @@
 package com.naldana.exampleJPA;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -28,31 +29,38 @@ public class ExampleJpaApplication {
 	public CommandLineRunner example(UserRepository userRepository) {
 		return (args) -> {
 			log.info("Iniciando Aplicación");
-			
-			log.info("Guardado un usurio");
-			User nestor = new User("Nestor", "Aldana","nestor1.aldana1@gmail.com","password");
-			
-			
-			Calendar dob = Calendar.getInstance();
-			dob.set(1994,01,11);
-			// Creando perfil
-			
-			UserProfile profile = new UserProfile("XXXXX", Gender.MALE, dob.getTime(), "a", "b", "c", "d", "e", "asd");
-			
-			nestor.setUserProfile(profile);
-			profile.setUser(nestor);
-			
-			userRepository.save(nestor);
-			
-			log.info("Todos los usuarios");
-			log.info("-------------------------------");
-			for ( User user: userRepository.findAll()) {
-				log.info(user.toString());
-				log.info(user.getUserProfile().getCity());
-			}
-			log.info("-------------------------------");
-			
-			
+			crearUsuario(userRepository);
 		};
+	}
+	
+	public static void crearUsuario(UserRepository userRepository) {
+		log.info("Guardado un usurio");
+		
+		User nestor = new User("Nestor", "Aldana","nestor1.aldana1@gmail.com","password");
+		
+		
+		Calendar dob = Calendar.getInstance();
+		dob.set(1994,01,11);
+		// Creando perfil
+		
+		UserProfile profile = new UserProfile("XXXXX", Gender.MALE, dob.getTime(), "a", "b", "c", "d", "e", "asd");
+		
+		nestor.setUserProfile(profile);
+		profile.setUser(nestor);
+		
+		try {
+			userRepository.save(nestor);
+		} catch(Exception e) {
+			log.warn("El usuario no puedo ser creado por: " + e.getMessage());
+			
+		}
+		
+		log.info("Todos los usuarios");
+		log.info("-------------------------------");
+		for ( User user: userRepository.findAll()) {
+			log.info(user.toString());
+			log.info(user.getUserProfile().getCity());
+		}
+		log.info("-------------------------------");
 	}
 }
