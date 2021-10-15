@@ -1,7 +1,9 @@
 package com.naldana.exampleJPA.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,6 +11,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
 public class Course {
 	
 	@Id
@@ -19,7 +22,7 @@ public class Course {
 	@Size(max = 100)
 	private String name;
 	
-	@ManyToMany
+	@ManyToMany(mappedBy = "likedCourses")
 	private Set<Student> likes;
 	
 	public Course() {
@@ -54,7 +57,13 @@ public class Course {
 		this.likes = likes;
 	}
 
-	
+	public void addStudent(Student student) {
+		if (likes == null) {
+			likes = new HashSet<Student>();
+		}
+		
+		likes.add(student);
+	}
 	
 
 }

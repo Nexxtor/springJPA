@@ -14,14 +14,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.naldana.exampleJPA.models.Cart;
+import com.naldana.exampleJPA.models.Course;
 import com.naldana.exampleJPA.models.Gender;
 import com.naldana.exampleJPA.models.Items;
+import com.naldana.exampleJPA.models.Student;
 import com.naldana.exampleJPA.models.User;
 import com.naldana.exampleJPA.models.UserProfile;
 import com.naldana.exampleJPA.repositories.CartRepository;
 import com.naldana.exampleJPA.repositories.ItemsRepository;
 import com.naldana.exampleJPA.repositories.UserProfileRepository;
 import com.naldana.exampleJPA.repositories.UserRepository;
+import com.naldana.exampleJPA.services.StudentCourseDataService;
 
 import javassist.bytecode.stackmap.BasicBlock.Catch;
 
@@ -40,6 +43,18 @@ public class ExampleJpaApplication {
 			log.info("Iniciando Aplicación");
 			crearUsuario(userRepository);
 			probarOneToMany(cartRepository,itemsRepository);
+		};
+	}
+	
+	
+	@Bean 
+	CommandLineRunner example2(StudentCourseDataService dataService) {
+		return (args) -> {
+			Student s = new Student("Nestor");
+			Course c = new Course("Spring");
+			dataService.saveCourse(c);
+			dataService.saveStudent(s);
+			dataService.conectStudentAndCourse(s, c);
 		};
 	}
 	
